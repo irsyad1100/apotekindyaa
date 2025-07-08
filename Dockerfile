@@ -1,5 +1,7 @@
-# Dockerfile
 FROM php:8.2-apache
+
+# Tambahkan ServerName untuk hilangkan warning
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
 # Install dependensi PostgreSQL
 RUN apt-get update && apt-get install -y \
@@ -9,8 +11,9 @@ RUN apt-get update && apt-get install -y \
 # Aktifkan mod_rewrite
 RUN a2enmod rewrite
 
-# Salin semua file proyek ke direktori Apache
-COPY ./web /var/www/html/
+# Copy file project
+COPY . /var/www/html/
 
-# Set izin agar Apache bisa mengakses semua file
-RUN chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html
+# Set permission
+RUN chown -R www-data:www-data /var/www/html \
+  && chmod -R 755 /var/www/html
